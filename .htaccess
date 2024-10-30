@@ -1,0 +1,18 @@
+RewriteEngine On
+RewriteBase /maps/
+
+# Redirect /maps/beranda ke /maps/views/beranda.php
+RewriteRule ^beranda$ views/beranda.php [L]
+
+# Redirect /maps/login to /maps/views/login.php
+RewriteRule ^login$ views/login.php [L]
+
+# Redirect /maps to /maps/views/login.php (if no specific page is given)
+RewriteRule ^$ views/login.php [L]
+
+# Blokir akses langsung ke file PHP dalam folder views
+# <Files *.php>
+#    RewriteEngine On
+#    RewriteCond %{THE_REQUEST} /views/ [NC]
+#    RewriteRule ^ - [F,L]
+# </Files>
