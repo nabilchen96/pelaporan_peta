@@ -1,13 +1,13 @@
 RewriteEngine On
-RewriteBase /maps/
+RewriteBase /pelaporan_peta/
 
-# Redirect /maps/beranda ke /maps/views/beranda.php
+# Redirect /pelaporan_peta/beranda ke /pelaporan_peta/views/beranda.php
 RewriteRule ^beranda$ views/beranda.php [L]
 
-# Redirect /maps/login to /maps/views/login.php
+# Redirect /pelaporan_peta/login to /pelaporan_peta/views/login.php
 RewriteRule ^login$ views/login.php [L]
 
-# Redirect /maps to /maps/views/login.php (if no specific page is given)
+# Redirect /pelaporan_peta to /pelaporan_peta/views/login.php (if no specific page is given)
 RewriteRule ^$ views/login.php [L]
 
 # Blokir akses langsung ke file PHP dalam folder views

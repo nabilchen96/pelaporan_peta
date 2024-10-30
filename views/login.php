@@ -5,16 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/maps/asset/login-form-02/fonts/icomoon/style.css">
-    <link rel="stylesheet" href="/maps/asset/login-form-02/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/maps/asset/login-form-02/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/maps/asset/login-form-02/css/style.css">
+    <link rel="stylesheet" href="/pelaporan_peta/asset/login-form-02/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="/pelaporan_peta/asset/login-form-02/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/pelaporan_peta/asset/login-form-02/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/pelaporan_peta/asset/login-form-02/css/style.css">
     <title>Sistem Informasi SPI</title>
 </head>
 
 <body>
     <div class="d-lg-flex half">
-        <div class="bg order-1 order-md-2" style="background-image: url('/maps/asset/images/location.png');"></div>
+        <div class="bg order-1 order-md-2" style="background-image: url('/pelaporan_peta/asset/images/location.png');"></div>
         <div class="contents order-2 order-md-1">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
@@ -22,7 +22,7 @@
                         <h3>Login to <br><strong>Aplikasi Pelaporan</strong></h3>
                         <p>Login untuk mengakses Aplikasi</p>
                         <br>
-                        <form id="loginForm" action="/maps/controller/loginController.php" method="POST">
+                        <form id="loginForm" action="/pelaporan_peta/controller/loginController.php" method="POST">
                             <div class="form-group first">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" placeholder="your-email@gmail.com" id="email"

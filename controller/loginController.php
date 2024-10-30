@@ -1,3 +1,3 @@
 <?php
-    header("Location: /maps/beranda");
+    header("Location: /pelaporan_peta/beranda");
 ?>
