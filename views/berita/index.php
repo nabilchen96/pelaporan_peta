@@ -105,6 +105,7 @@
                             <label>Gambar</label>
                             <input type="file" class="form-control" id="gambar" placeholder="Gambar" required
                                 name="gambar">
+                            <div id="preview_gambar" class="mt-2"></div>
                         </div>
                         <div class="mb-3">
                             <label>Konten</label>
@@ -142,7 +143,7 @@
                 columns: [
                     {
                         data: null, render: function (data, type, row) {
-                            return `<img style="width: 200px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
+                            return `<img style="width: 200px; object-fit: cover; height: 150px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
                         }
                     },
                     {
@@ -188,8 +189,15 @@
                 if (recipient) {
                     var modal = $(this)
                     modal.find('#id').val(cokData[0].id)
-                    modal.find('#judul').val(cokData[0].email)
-                    modal.find('#konten').val(cokData[0].nama)
+                    modal.find('#judul').val(cokData[0].judul)
+                    modal.find('#konten').val(cokData[0].konten)
+
+                    document.getElementById('preview_gambar').innerHTML = `
+                        Gambar Preview <br>
+                        <img class="shadow" height="100px" src="/pelaporan_peta/asset/gambar_berita/${cokData[0].gambar}">
+                    `
+                }else{
+                    document.getElementById('preview_gambar').innerHTML = ``
                 }
             })
 

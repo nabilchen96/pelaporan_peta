@@ -5,13 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id']; // Ambil ID dari permintaan POST
 
     // Query untuk menghapus user
-    $query = "DELETE FROM user WHERE id = ?";
+    $query = "DELETE FROM berita WHERE id = ?";
     $stmt = $conn->prepare($query);
 
     if ($stmt->execute([$id])) {
-        echo json_encode(['status' => 'success', 'message' => 'User berhasil dihapus.']);
+        echo json_encode(['status' => 'success', 'message' => 'Berita berhasil dihapus.']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus user.']);
+        echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus berita.']);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Metode tidak diizinkan.']);

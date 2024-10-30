@@ -1,31 +1,90 @@
 <?php
-include '../../config.php'; // Sesuaikan path ke file database Anda
 
-$response = ["status" => "error", "message" => "Terjadi kesalahan."];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $email = $_POST['email'];
-    $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
+include '../../config.php'; // Menyertakan file config.php
 
-    // Perbarui data ke database
-    $query = $password
-        ? "UPDATE user SET nama = ?, email = ?, password = ? WHERE id = ?"
-        : "UPDATE user SET nama = ?, email = ? WHERE id = ?";
+// Mengambil ID dari POST untuk menentukan data yang akan diperbarui
+$id = $_POST['id'];
 
-    $stmt = $conn->prepare($query);
-    if ($password) {
-        $stmt->bind_param("sssi", $nama, $email, $password, $id);
+// Validasi dan proses upload gambar jika ada gambar yang diupload
+if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
+    $fileTmpPath = $_FILES['gambar']['tmp_name'];
+    $fileName = $_FILES['gambar']['name'];
+    $fileSize = $_FILES['gambar']['size'];
+    $fileType = $_FILES['gambar']['type'];
+    $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+    // Ekstensi file yang diizinkan
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+    // Validasi file hanya gambar
+    if (in_array($fileExtension, $allowedExtensions) && strpos($fileType, 'image/') === 0) {
+        // Nama unik untuk file gambar
+        $newFileName = uniqid() . '.' . $fileExtension;
+        $uploadFileDir = '../../asset/gambar_berita/';
+        $destPath = $uploadFileDir . $newFileName;
+
+        // Memindahkan file ke direktori tujuan
+        if (move_uploaded_file($fileTmpPath, $destPath)) {
+            $gambar = $newFileName; // Simpan nama file baru jika ada gambar diupload
+        } else {
+            $response = array(
+                "status" => "error",
+                "message" => "Gagal mengupload gambar."
+            );
+            // Mengembalikan respons JSON dan berhenti
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit();
+        }
     } else {
-        $stmt->bind_param("ssi", $nama, $email, $id);
+        $response = array(
+            "status" => "error",
+            "message" => "File yang diupload bukan gambar atau format tidak diizinkan."
+        );
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     }
-
-    if ($stmt->execute()) {
-        $response = ["status" => "success", "message" => "Data berhasil diperbarui."];
-    } else {
-        $response = ["status" => "error", "message" => "Gagal memperbarui data."];
-    }
+} else {
+    // Jika tidak ada gambar baru yang diupload, gunakan gambar lama
+    $gambar = $_POST['gambar_lama'];
 }
 
+// Mengambil data dari POST
+$judul = $_POST['judul'];
+$konten = $_POST['konten'];
+
+// Query SQL untuk memperbarui data di database
+$sql = "UPDATE berita SET judul = ?, gambar = ?, konten = ? WHERE id = ?";
+$stmt = $conn->prepare($sql);
+
+// Bind parameter
+$stmt->bind_param("sssi", $judul, $gambar, $konten, $id);
+
+// Menjalankan query
+if ($stmt->execute()) {
+    $response = array(
+        "status" => "success",
+        "message" => "Berita berhasil diperbarui.",
+        "data" => array(
+            "id" => $id,
+            "judul" => $judul,
+            "gambar" => $gambar,
+            "konten" => $konten
+        )
+    );
+} else {
+    $response = array(
+        "status" => "error",
+        "message" => "Gagal memperbarui Berita: " . $stmt->error
+    );
+}
+
+// Menutup statement dan koneksi
+$stmt->close();
+$conn->close();
+
+// Mengembalikan respons JSON
+header('Content-Type: application/json');
 echo json_encode($response);
 ?>

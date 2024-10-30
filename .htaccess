@@ -7,6 +7,9 @@ RewriteRule ^beranda$ views/beranda.php [L]
 # Redirect /pelaporan_peta/user ke /pelaporan_peta/views/user/index.php
 RewriteRule ^user$ views/user/index.php [L]
 
+# Redirect /pelaporan_peta/peta ke /pelaporan_peta/views/peta/index.php
+RewriteRule ^peta$ views/peta/index.php [L]
+
 # Redirect /pelaporan_peta/berita ke /pelaporan_peta/views/berita/index.php
 RewriteRule ^berita$ views/berita/index.php [L]
 

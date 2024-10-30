@@ -12,8 +12,7 @@
                             <li><a class="dropdown-item" href="/pelaporan_peta/beranda">Beranda</a></li>
                             <li><a class="dropdown-item" href="/pelaporan_peta/user">User</a></li>
                             <li><a class="dropdown-item" href="/pelaporan_peta/berita">Berita</a></li>
-                            <li><a class="dropdown-item" href="#">Import Peta</a></li>
-                            <li><a class="dropdown-item" href="#">Export Peta</a></li>
+                            <li><a class="dropdown-item" href="/pelaporan_peta/peta">Peta</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
