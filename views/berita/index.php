@@ -103,7 +103,7 @@
                         </div>
                         <div class="mb-3">
                             <label>Gambar</label>
-                            <input type="file" class="form-control" id="gambar" placeholder="Gambar" required
+                            <input type="file" class="form-control" id="gambar" placeholder="Gambar"
                                 name="gambar">
                             <div id="preview_gambar" class="mt-2"></div>
                         </div>
@@ -143,7 +143,7 @@
                 columns: [
                     {
                         data: null, render: function (data, type, row) {
-                            return `<img style="width: 200px; object-fit: cover; height: 150px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
+                            return `<img style="width: 100%; object-fit: cover; height: 150px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
                         }
                     },
                     {

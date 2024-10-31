@@ -47,7 +47,14 @@ if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
     }
 } else {
     // Jika tidak ada gambar baru yang diupload, gunakan gambar lama
-    $gambar = $_POST['gambar_lama'];
+    $sql = "SELECT * FROM berita WHERE id = $id";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $gambar = $row['gambar'];
+    } else {
+        $gambar = "";
+    }
 }
 
 // Mengambil data dari POST

@@ -22,70 +22,39 @@
                 </div>
                 <div class="col-lg-10 pt-3">
                     <ul class="nav nav-lt-tab">
-                        <li class="nav-item pe-3" style="width: 300px;">
-                            <div class="card" style="
+                        <?php
+
+                        include $_SERVER['DOCUMENT_ROOT'] . '/pelaporan_peta/config.php';
+
+                        // Menyertakan file config.php
+                        
+                        // Mengambil data pengguna dari database
+                        $sql = "SELECT * FROM berita";
+                        $result = $conn->query($sql);
+
+                        $data = array(); // Array untuk menyimpan data
+                        
+                        foreach ($result as $row) {
+
+                            ?>
+                            <li class="nav-item pb-2 pe-3" style="width: 300px;">
+                                <div class="card" style="
                                     background-image: linear-gradient(360deg, black, transparent),
-                                    url('https://cdn0-production-images-kly.akamaized.net/3wr7hq6kSEJpzB2xR5NkawV7VLI=/500x281/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4118959/original/068872100_1660122315-landscape-ge695d3c1b_1920.jpg');
+                                    url('../pelaporan_peta/asset/gambar_berita/<?= $row['gambar']; ?>');
                                     background-position: center;
+                                    background-size: cover;
                                     ">
-                                <div class="card-body testimony-text" style="white-space: normal;">
-                                    <p class="mb-0 mt-4"
-                                        style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
-                                        <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. 22-11-2024
-                                        </a>
-                                    </p>
+                                    <div class="card-body testimony-text" style="white-space: normal;">
+                                        <p class="mb-0 mt-4"
+                                            style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
+                                            <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
+                                                <?= substr($row['judul'], 0, 80); ?>
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="nav-item pe-3" style="width: 300px;">
-                            <div class="card" style="
-                                    background-image: linear-gradient(360deg, black, transparent),
-                                    url('https://cdn0-production-images-kly.akamaized.net/3wr7hq6kSEJpzB2xR5NkawV7VLI=/500x281/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4118959/original/068872100_1660122315-landscape-ge695d3c1b_1920.jpg');
-                                    background-position: center;
-                                    ">
-                                <div class="card-body testimony-text" style="white-space: normal;">
-                                    <p class="mb-0 mt-4"
-                                        style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
-                                        <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. 22-11-2024
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item pe-3" style="width: 300px;">
-                            <div class="card" style="
-                                    background-image: linear-gradient(360deg, black, transparent),
-                                    url('https://cdn0-production-images-kly.akamaized.net/3wr7hq6kSEJpzB2xR5NkawV7VLI=/500x281/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4118959/original/068872100_1660122315-landscape-ge695d3c1b_1920.jpg');
-                                    background-position: center;
-                                    ">
-                                <div class="card-body testimony-text" style="white-space: normal;">
-                                    <p class="mb-0 mt-4"
-                                        style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
-                                        <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. 22-11-2024
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item pe-3" style="width: 300px;">
-                            <div class="card" style="
-                                    background-image: linear-gradient(360deg, black, transparent),
-                                    url('https://cdn0-production-images-kly.akamaized.net/3wr7hq6kSEJpzB2xR5NkawV7VLI=/500x281/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4118959/original/068872100_1660122315-landscape-ge695d3c1b_1920.jpg');
-                                    background-position: center;
-                                    ">
-                                <div class="card-body testimony-text" style="white-space: normal;">
-                                    <p class="mb-0 mt-4"
-                                        style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
-                                        <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. 22-11-2024
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>

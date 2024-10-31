@@ -61,11 +61,6 @@ session_start(); // Memulai session
                 flex-direction: column-reverse;
             }
         }
-
-        th,
-        td {
-            white-space: nowrap;
-        }
     </style>
 </head>
 
@@ -83,10 +78,9 @@ session_start(); // Memulai session
                     <tr>
                         <th>Longitude</th>
                         <th>Latitude</th>
-                        <th>Unit Kerja</th>
-                        <th>Keterangan</th>
-                        <th>Tanggal</th>
-                        <th width="5%">Edit</th>
+                        <th style="white-space: nowrap;">Unit Kerja</th>
+                        <th width="35%">Keterangan</th>
+                        <th width="10%">Tanggal</th>
                         <th width="5%">Hapus</th>
                     </tr>
                 </thead>
@@ -157,11 +151,6 @@ session_start(); // Memulai session
                     { data: 'tanggal' },
                     {
                         data: null, render: function (data, type, row) {
-                            return '<button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm" data-id="' + row.id + '">✏️</button>'; // Tombol edit
-                        }
-                    },
-                    {
-                        data: null, render: function (data, type, row) {
                             return '<button class="text-center btn btn-danger btn-sm delete-btn" data-id="' + row.id + '">🗑️</button>'; // Tombol hapus
                         }
                     }
@@ -171,6 +160,33 @@ session_start(); // Memulai session
                 ordering: false,
                 info: true,
                 lengthChange: true,
+            });
+
+            // Event listener untuk tombol hapus
+            $('#example tbody').on('click', '.delete-btn', function () {
+                const userId = $(this).data('id'); // Ambil ID pengguna dari atribut data-id
+
+                if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+                    fetch('/pelaporan_peta/controller/peta/deletePeta.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({ id: userId }) // Kirim ID pengguna untuk dihapus
+                    })
+                        .then(response => response.json()) // Mengkonversi respons ke JSON
+                        .then(data => {
+                            alert(data.message); // Tampilkan pesan sukses atau error
+                            if (data.status === "success") {
+                                // Refresh DataTable
+                                table.ajax.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat menghapus peta.');
+                        });
+                }
             });
         });
     </script>
