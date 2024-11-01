@@ -35,9 +35,9 @@ if (isset($_SESSION['user_id'])) {
                         <p>Login untuk mengakses Aplikasi</p>
                         <br>
                         <?php
-                        if (isset($_SESSION['login_error'])): ?>
-                            <p class="alert alert-danger"><?php echo $_SESSION['login_error']; ?></p>
-                            <?php unset($_SESSION['login_error']); // Hapus session error setelah ditampilkan ?>
+                        if (isset($_SESSION['error'])): ?>
+                            <p class="alert alert-danger"><?php echo $_SESSION['error']; ?></p>
+                            <?php unset($_SESSION['error']); // Hapus session error setelah ditampilkan ?>
                         <?php endif; ?>
                         <form id="loginForm" action="/pelaporan_peta/controller/loginController.php" method="POST">
                             <div class="form-group first">
