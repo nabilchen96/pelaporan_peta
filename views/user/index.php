@@ -114,7 +114,7 @@
                         <div class="mb-3">
                             <label>Password</label>
                             <input type="password" class="form-control" id="password" placeholder="password"
-                                name="password">
+                                name="password" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -178,6 +178,7 @@
                 })
 
                 document.querySelector('form').reset();
+                
 
                 if (recipient) {
                     var modal = $(this)
@@ -185,6 +186,9 @@
                     modal.find('#email').val(cokData[0].email)
                     modal.find('#nama').val(cokData[0].nama)
                     modal.find('#password').val("")
+                    document.getElementById("password").removeAttribute("required");
+                }else{
+                    document.getElementById("password").setAttribute("required", "");
                 }
             })
 
