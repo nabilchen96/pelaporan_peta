@@ -1,29 +1,41 @@
-<?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /pelaporan_peta/login");
-    exit;
-}
-?>
 <div class="bg-primary">
     <div class="container">
         <div class="col-12 list-produk">
             <div class="row d-flex">
+                <?php
+                // Mulai session
+                session_start();
+
+                // Misalnya, periksa apakah sesi 'logged_in' ada dan bernilai true
+                $isLoggedIn = isset($_SESSION['user_id']) === true;
+                ?>
+
                 <div class="col-lg-2 pt-3">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdowm Menu
+                            Dropdown Menu
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                            <li><a class="dropdown-item" href="/pelaporan_peta/beranda">Beranda</a></li>
-                            <li><a class="dropdown-item" href="/pelaporan_peta/user">User</a></li>
-                            <li><a class="dropdown-item" href="/pelaporan_peta/berita">Berita</a></li>
-                            <li><a class="dropdown-item" href="/pelaporan_peta/peta">Peta</a></li>
+                            <li><a class="dropdown-item" href="/pelaporan_peta">Beranda</a></li>
+
+                            <!-- Tampilkan hanya jika user sudah login -->
+                            <?php if ($isLoggedIn): ?>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/user">User</a></li>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/berita">Berita</a></li>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/peta">Peta</a></li>
+                            <?php endif; ?>
+
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/pelaporan_peta/controller/logout.php">Logout</a></li>
+
+                            <!-- Ganti Logout menjadi Login jika user belum login -->
+                            <?php if ($isLoggedIn): ?>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/controller/logout.php">Logout</a></li>
+                            <?php else: ?>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/controller/login.php">Login</a></li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>

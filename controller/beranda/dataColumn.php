@@ -1,11 +1,5 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /pelaporan_peta/login");
-    exit;
-}
-
 // dataColumn.php
 header('Content-Type: application/json');
 include '../../config.php'; // Pastikan Anda sudah menghubungkan ke database

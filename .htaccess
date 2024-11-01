@@ -1,8 +1,8 @@
 RewriteEngine On
 RewriteBase /pelaporan_peta/
 
-# Redirect /pelaporan_peta/beranda ke /pelaporan_peta/views/beranda.php
-RewriteRule ^beranda$ views/beranda.php [L]
+# Redirect /pelaporan_peta/ ke /pelaporan_peta/views/beranda.php
+RewriteRule ^$ views/beranda.php [L]
 
 # Redirect /pelaporan_peta/user ke /pelaporan_peta/views/user/index.php
 RewriteRule ^user$ views/user/index.php [L]

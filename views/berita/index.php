@@ -62,7 +62,13 @@
 </head>
 
 <body>
-
+    <?php
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: /pelaporan_peta/login");
+        exit;
+    }
+    ?>
     <?php include('../components/slider_berita.php'); ?>
     <div class="container content mt-4">
         <h2>Data Berita</h2>
@@ -159,7 +165,7 @@
                                         ${row.judul} 
                                         <br><br>
                                         <b>Konten</b><br>
-                                        ${ row.konten.slice(0, 250) }
+                                        ${row.konten.slice(0, 250)}
                                     </div>`
                         }
                     },

@@ -62,7 +62,13 @@
 </head>
 
 <body>
-
+    <?php
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: /pelaporan_peta/login");
+        exit;
+    }
+    ?>
     <?php include('../components/slider_berita.php'); ?>
     <div class="container content mt-4">
         <h2>Data Peta</h2>

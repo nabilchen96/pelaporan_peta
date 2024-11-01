@@ -1,11 +1,5 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /pelaporan_peta/login");
-    exit;
-}
-
 // Koneksi ke database
 include $_SERVER['DOCUMENT_ROOT'] . '/pelaporan_peta/config.php';
 

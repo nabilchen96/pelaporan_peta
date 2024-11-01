@@ -67,7 +67,13 @@
 </head>
 
 <body>
-
+    <?php
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: /pelaporan_peta/login");
+        exit;
+    }
+    ?>
     <?php include('../components/slider_berita.php'); ?>
     <div class="container content mt-4">
         <h2>Data User</h2>
@@ -100,7 +106,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form>
-                <input type="hidden" id="id" name="id">
+                    <input type="hidden" id="id" name="id">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Nama</label>
@@ -178,7 +184,7 @@
                 })
 
                 document.querySelector('form').reset();
-                
+
 
                 if (recipient) {
                     var modal = $(this)
@@ -187,7 +193,7 @@
                     modal.find('#nama').val(cokData[0].nama)
                     modal.find('#password').val("")
                     document.getElementById("password").removeAttribute("required");
-                }else{
+                } else {
                     document.getElementById("password").setAttribute("required", "");
                 }
             })
