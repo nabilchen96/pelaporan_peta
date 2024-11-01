@@ -59,30 +59,45 @@
 </head>
 
 <body>
-    <?php
-    include('../components/slider_berita.php');
-    include '../../config.php';
+    <?php 
+    include('../components/slider_berita.php'); 
+    include '../../config.php'; 
 
     $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+    $berita = null;
 
     if ($id > 0) {
-        $sql = "SELECT * FROM berita WHERE id = ?";
+        $sql = "SELECT id, judul, created_at, konten, gambar, iframe FROM berita WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $berita = $result->fetch_assoc();
+
+        // Gunakan bind_result untuk mengambil hasil
+        $stmt->bind_result($berita_id, $judul, $created_at, $konten, $gambar, $iframe);
+
+        // Ambil hasil
+        if ($stmt->fetch()) {
+            $berita = [
+                'id' => $berita_id,
+                'judul' => $judul,
+                'created_at' => $created_at,
+                'konten' => $konten,
+                'gambar' => $gambar,
+                'iframe' => $iframe
+            ];
+        }
         $stmt->close();
     }
 
-    $recent_sql = "SELECT * FROM berita ORDER BY id DESC LIMIT 5";
+    // Query untuk mengambil recent posts
+    $recent_sql = "SELECT id, judul, gambar FROM berita ORDER BY id DESC LIMIT 5";
     $recent_posts = $conn->query($recent_sql);
 
     $conn->close();
     ?>
 
     <div class="container mt-2">
-        <?php if ($id > 0 && isset($berita)): ?>
+        <?php if ($id > 0 && $berita) : ?>
             <div class="row">
                 <div class="col-lg-8">
                     <h2 class="mt-4"><?= htmlspecialchars($berita['judul']); ?></h2>
@@ -93,22 +108,22 @@
                     <p style="line-height: 2rem;"><?= nl2br(htmlspecialchars($berita['konten'])); ?></p>
                     <h2 class="mt-4 mb-4">Iframe</h2>
                     <hr>
-                    <?php
-                    $iframe = str_replace('<iframe', '<iframe width="100%" height="500px"', $berita['iframe']);
-                    echo $iframe;
+                    <?php 
+                        // Tambahkan width dan height pada iframe
+                        $iframe_with_dimensions = str_replace('<iframe', '<iframe width="100%" height="500px"', $berita['iframe']); 
+                        echo $iframe_with_dimensions;
                     ?>
                 </div>
 
                 <div class="col-lg-3 offset-lg-1">
                     <h2 class="mt-4 mb-4">Recent Post</h2>
                     <hr>
-                    <?php while ($post = $recent_posts->fetch_assoc()): ?>
+                    <?php while ($post = $recent_posts->fetch_assoc()) : ?>
                         <div class="card mb-4">
                             <img style="height: 150px; object-fit: cover;"
                                 src="../../pelaporan_peta/asset/gambar_berita/<?= htmlspecialchars($post['gambar']); ?>" alt="">
                             <div class="card-body">
-                                <a style="text-decoration: none;" href="../pelaporan_peta/detail_berita?id=<?= $post['id']; ?>"
-                                    class="card-text">
+                                <a style="text-decoration: none;" href="../pelaporan_peta/detail_berita?id=<?= $post['id']; ?>" class="card-text">
                                     <?= substr(htmlspecialchars($post['judul']), 0, 50); ?>...
                                 </a>
                             </div>
@@ -116,15 +131,14 @@
                     <?php endwhile; ?>
                 </div>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <p>Data tidak ditemukan atau ID tidak valid.</p>
         <?php endif; ?>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 </body>
