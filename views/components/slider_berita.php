@@ -32,9 +32,9 @@
 
                             <!-- Ganti Logout menjadi Login jika user belum login -->
                             <?php if ($isLoggedIn): ?>
-                                <li><a class="dropdown-item" href="/pelaporan_peta/controller/logout.php">Logout</a></li>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/logout">Logout</a></li>
                             <?php else: ?>
-                                <li><a class="dropdown-item" href="/pelaporan_peta/controller/login.php">Login</a></li>
+                                <li><a class="dropdown-item" href="/pelaporan_peta/login">Login</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>
