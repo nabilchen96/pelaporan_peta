@@ -48,7 +48,7 @@
                         // Menyertakan file config.php
                         
                         // Mengambil data pengguna dari database
-                        $sql = "SELECT * FROM berita ORDER BY RAND()";
+                        $sql = "SELECT * FROM berita ORDER BY RAND() LIMIT 4";
                         $result = $conn->query($sql);
 
                         $data = array(); // Array untuk menyimpan data
@@ -77,9 +77,58 @@
                                 </div>
                             </li>
                         <?php } ?>
+
+                        <!-- Duplikasi item untuk loop -->
+                        <?php foreach ($result as $row) { ?>
+                            <li class="nav-item pb-2 pe-3" style="width: 300px;">
+                                <div class="card" style="
+                        border-radius: 8px;
+                        border: none;
+                        background-image: linear-gradient(360deg, black, transparent),
+                        url('../pelaporan_peta/asset/gambar_berita/<?= $row['gambar']; ?>');
+                        background-position: center;
+                        background-size: cover;
+                    ">
+                                    <div class="card-body testimony-text" style="white-space: normal;">
+                                        <p class="mb-0 mt-4"
+                                            style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
+                                            <a style="color: white; text-decoration: none;"
+                                                href="../pelaporan_peta/detail_berita?id=<?= $row['id']; ?>">
+                                                <?= substr($row['judul'], 0, 80); ?>
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const slider = document.querySelector('.nav');
+    let scrollAmount = 0;
+
+    function autoScrollSlider() {
+        scrollAmount += 0.5; // Sesuaikan kecepatan agar lebih halus
+        if (scrollAmount >= slider.scrollWidth / 2) {
+            scrollAmount = 0; // Reset ke awal saat sudah mencapai tengah, membuatnya tampak tanpa batas
+        }
+        slider.scrollLeft = scrollAmount;
+    }
+
+    // Pengaturan interval agar lebih smooth
+    let sliderInterval = setInterval(autoScrollSlider, 20);
+
+    slider.addEventListener('mouseover', () => {
+        clearInterval(sliderInterval); // Hentikan saat di-hover
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        sliderInterval = setInterval(autoScrollSlider, 20); // Lanjutkan saat mouse keluar
+    });
+
+</script>

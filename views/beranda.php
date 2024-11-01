@@ -71,7 +71,7 @@
                 <form id="searchForm1">
                     <div class="input-group mb-3 w-100">
                         <select name="tahun" class="form-select" id="tahun">
-                            <option>--PILIH TAHUN--</option>
+                            <option value="">--PILIH TAHUN--</option>
                             <?php
                             // Mengambil data unik tahun dari kolom tanggal
                             $sql = "SELECT DISTINCT YEAR(tanggal) AS tahun FROM peta";
@@ -89,7 +89,7 @@
 
                         </select>
                         <select name="unit_kerja" class="form-select" id="unit_kerja">
-                            <option>--PILIH UNIT--</option>
+                            <option value="">--PILIH UNIT--</option>
                             <?php
                             $sql = "SELECT DISTINCT unit_kerja FROM peta"; // Menggunakan DISTINCT untuk data unik
                             $result = $conn->query($sql);
@@ -230,7 +230,6 @@
     <script>
         // Fungsi untuk mengambil data dari PHP dengan fetch, dengan parameter filter
         async function fetchData(tahun = '', unit = '') {
-            // URL untuk data, dengan parameter tahun dan unit jika ada
             let url = '/pelaporan_peta/controller/beranda/dataColumn.php';
 
             // Menambahkan parameter tahun dan unit jika ada
@@ -286,6 +285,9 @@
                     }]
                 });
 
+                // Menentukan kategori untuk sumbu X pada column chart
+                const categories = data.map(item => item.name);
+
                 // Memuat Highcharts untuk column chart
                 Highcharts.chart('bar-chart', {
                     chart: {
@@ -294,7 +296,12 @@
                     title: {
                         text: 'Jumlah Kejadian per Unit Kerja'
                     },
-                    
+                    xAxis: {
+                        categories: categories, // Menggunakan kategori unit atau tahun
+                        title: {
+                            text: tahun && unit ? 'Tahun dan Unit Kerja' : tahun ? 'Unit Kerja' : 'Tahun'
+                        }
+                    },
                     yAxis: {
                         title: {
                             text: ''
@@ -303,7 +310,7 @@
                     series: [{
                         name: 'Total',
                         colorByPoint: true,
-                        data: data
+                        data: data.map(item => item.y) // Data tanpa nama, hanya nilai total
                     }]
                 });
             });
@@ -344,6 +351,9 @@
                 }]
             });
 
+            // Menentukan kategori untuk sumbu X pada column chart
+            const categories = data.map(item => item.name);
+
             Highcharts.chart('bar-chart', {
                 chart: {
                     type: 'column'
@@ -352,7 +362,7 @@
                     text: 'Jumlah Kejadian per Unit Kerja'
                 },
                 xAxis: {
-                    type: 'category',
+                    categories: categories, // Kategori unit atau tahun
                     title: {
                         text: 'Unit Kerja'
                     }
@@ -365,11 +375,13 @@
                 series: [{
                     name: 'Total',
                     colorByPoint: true,
-                    data: data
+                    data: data.map(item => item.y) // Data tanpa nama, hanya nilai total
                 }]
             });
         });
     </script>
+
+
 
 </body>
 

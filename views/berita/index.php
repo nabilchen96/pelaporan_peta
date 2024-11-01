@@ -28,6 +28,7 @@
             overflow: auto;
             overflow-y: hidden;
             max-width: 100%;
+            /* margin: 0 0 1em; */
             white-space: nowrap;
         }
 
@@ -62,14 +63,14 @@
 </head>
 
 <body>
+    <?php include('../components/slider_berita.php'); ?>
     <?php
-    session_start();
+    // session_start();
     if (!isset($_SESSION['user_id'])) {
         header("Location: /pelaporan_peta/login");
         exit;
     }
     ?>
-    <?php include('../components/slider_berita.php'); ?>
     <div class="container content mt-4">
         <h2>Data Berita</h2>
         <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-warning mt-4 mb-4">
