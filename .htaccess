@@ -19,9 +19,6 @@ RewriteRule ^detail_berita$ views/berita/detail.php [L]
 # Redirect /pelaporan_peta/login to /pelaporan_peta/views/login.php
 RewriteRule ^login$ views/login.php [L]
 
-# Redirect /pelaporan_peta to /pelaporan_peta/views/login.php (if no specific page is given)
-RewriteRule ^$ views/login.php [L]
-
 # Blokir akses langsung ke file PHP dalam folder views
 # <Files *.php>
 #    RewriteEngine On

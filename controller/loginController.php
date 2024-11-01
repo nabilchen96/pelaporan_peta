@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_name'] = $data['name'];
 
             // Redirect ke halaman beranda setelah login berhasil
-            header("Location: /pelaporan_peta/beranda");
+            header("Location: /pelaporan_peta");
             exit;
         }
     }
