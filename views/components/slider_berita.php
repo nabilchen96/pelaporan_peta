@@ -47,6 +47,7 @@ if (!isset($_SESSION['user_id'])) {
                             <li class="nav-item pb-2 pe-3" style="width: 300px;">
                                 <div class="card" style="
                                     border-radius: 8px;
+                                    border: none;
                                     background-image: linear-gradient(360deg, black, transparent),
                                     url('../pelaporan_peta/asset/gambar_berita/<?= $row['gambar']; ?>');
                                     background-position: center;
