@@ -1,12 +1,11 @@
 <?php
-
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: /pelaporan_peta/login");
     exit;
 }
 
-require_once '../../config.php'; // Pastikan Anda mengubah path ini sesuai kebutuhan
+require_once '../../config.php'; // Pastikan path ini sudah benar
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id']; // Ambil ID dari permintaan POST
@@ -15,7 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "DELETE FROM user WHERE id = ?";
     $stmt = $conn->prepare($query);
 
-    if ($stmt->execute([$id])) {
+    // Menggunakan bind_param untuk mengikat parameter
+    $stmt->bind_param("i", $id);
+
+    if ($stmt->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'User berhasil dihapus.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus user.']);
