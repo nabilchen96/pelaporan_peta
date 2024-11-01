@@ -1,3 +1,14 @@
+<?php
+
+session_start();
+
+// Periksa apakah user sudah login
+if (isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/beranda");
+    exit;
+}
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -14,7 +25,8 @@
 
 <body>
     <div class="d-lg-flex half">
-        <div class="bg order-1 order-md-2" style="background-image: url('/pelaporan_peta/asset/images/location.png');"></div>
+        <div class="bg order-1 order-md-2" style="background-image: url('/pelaporan_peta/asset/images/location.png');">
+        </div>
         <div class="contents order-2 order-md-1">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
@@ -22,6 +34,11 @@
                         <h3>Login to <br><strong>Aplikasi Pelaporan</strong></h3>
                         <p>Login untuk mengakses Aplikasi</p>
                         <br>
+                        <?php
+                        if (isset($_SESSION['login_error'])): ?>
+                            <p class="alert alert-danger"><?php echo $_SESSION['login_error']; ?></p>
+                            <?php unset($_SESSION['login_error']); // Hapus session error setelah ditampilkan ?>
+                        <?php endif; ?>
                         <form id="loginForm" action="/pelaporan_peta/controller/loginController.php" method="POST">
                             <div class="form-group first">
                                 <label for="email">Email</label>

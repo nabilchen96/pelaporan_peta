@@ -1,4 +1,11 @@
 <?php
+
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+
 include '../../config.php'; // Sesuaikan path ke file database Anda
 
 $response = ["status" => "error", "message" => "Terjadi kesalahan."];

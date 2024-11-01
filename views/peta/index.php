@@ -1,6 +1,3 @@
-<?php
-session_start(); // Memulai session
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,7 +92,7 @@ session_start(); // Memulai session
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Form User</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Form Import</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="controller/peta/importExcel.php" method="post" enctype="multipart/form-data">

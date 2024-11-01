@@ -74,8 +74,8 @@
                 <thead class="bg-info text-white">
                     <tr>
                         <th>Gambar</th>
-                        <th width="35%">Judul</th>
-                        <th width="35%">Konten</th>
+                        <th width="45%">Konten</th>
+                        <th width="25%">Iframe</th>
                         <th width="5%">Edit</th>
                         <th width="5%">Hapus</th>
                     </tr>
@@ -91,25 +91,31 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Form User</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Form Berita</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form>
-                <input type="hidden" id="id" name="id">
+                    <input type="hidden" id="id" name="id">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Judul</label>
-                            <input type="text" class="form-control" id="judul" placeholder="Judul" required name="judul">
+                            <input type="text" class="form-control" id="judul" placeholder="Judul" required
+                                name="judul">
                         </div>
                         <div class="mb-3">
                             <label>Gambar</label>
-                            <input type="file" class="form-control" id="gambar" placeholder="Gambar"
-                                name="gambar">
+                            <input type="file" class="form-control" id="gambar" placeholder="Gambar" name="gambar">
                             <div id="preview_gambar" class="mt-2"></div>
                         </div>
                         <div class="mb-3">
                             <label>Konten</label>
-                           <textarea name="konten" id="konten" rows="10" placeholder="Konten" required class="form-control"></textarea>
+                            <textarea name="konten" id="konten" rows="10" placeholder="Konten" required
+                                class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>Iframe</label>
+                            <textarea name="iframe" id="iframe" rows="10" placeholder="Konten"
+                                class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -143,17 +149,33 @@
                 columns: [
                     {
                         data: null, render: function (data, type, row) {
-                            return `<img style="width: 100%; object-fit: cover; height: 150px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
+                            return `<img class="shadow" style="width: 100%; object-fit: cover; height: 150px;" src="/pelaporan_peta/asset/gambar_berita/${row.gambar}">`; // Tombol edit
                         }
                     },
                     {
                         data: null, render: function (data, type, row) {
-                            return `${row.judul}`
+                            return `<div>
+                                        <b>Judul</b><br>
+                                        ${row.judul} 
+                                        <br><br>
+                                        <b>Konten</b><br>
+                                        ${ row.konten.slice(0, 250) }
+                                    </div>`
                         }
                     },
                     {
                         data: null, render: function (data, type, row) {
-                            return `${row.konten.substring(0, 150)}`
+                            // Periksa apakah row.iframe ada dan bukan null
+                            if (row.iframe) {
+                                // Mengganti width dan height iframe
+                                const updatedIframe = row.iframe
+                                    .replace(/width="[^"]*"/, 'width="100%"')
+                                    .replace(/height="[^"]*"/, 'height="150"');
+                                return updatedIframe;
+                            } else {
+                                // Kembalikan pesan atau elemen kosong jika iframe tidak ada
+                                return '<div>Tidak ada iframe tersedia</div>';
+                            }
                         }
                     },
                     {
@@ -191,12 +213,13 @@
                     modal.find('#id').val(cokData[0].id)
                     modal.find('#judul').val(cokData[0].judul)
                     modal.find('#konten').val(cokData[0].konten)
+                    modal.find('#iframe').val(cokData[0].iframe)
 
                     document.getElementById('preview_gambar').innerHTML = `
                         Gambar Preview <br>
                         <img class="shadow" height="100px" src="/pelaporan_peta/asset/gambar_berita/${cokData[0].gambar}">
                     `
-                }else{
+                } else {
                     document.getElementById('preview_gambar').innerHTML = ``
                 }
             })

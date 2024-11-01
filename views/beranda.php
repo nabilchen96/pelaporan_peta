@@ -68,13 +68,42 @@
     <div class="container content mt-4">
         <div class="row">
             <div class="col-lg-4">
-                <form id="searchForm">
+                <form id="searchForm1">
                     <div class="input-group mb-3 w-100">
-                        <select name="" class="form-select" id="">
-                            <option value="">Tahun 2024</option>
+                        <select name="tahun" class="form-select" id="tahun">
+                            <option>--PILIH TAHUN--</option>
+                            <?php
+                            // Mengambil data unik tahun dari kolom tanggal
+                            $sql = "SELECT DISTINCT YEAR(tanggal) AS tahun FROM peta";
+                            $result = $conn->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                // Menampilkan setiap tahun unik sebagai opsi
+                                while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                    <option><?= $row['tahun']; ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+
                         </select>
-                        <select name="" class="form-select" id="">
-                            <option value="">Unit Sarpras</option>
+                        <select name="unit_kerja" class="form-select" id="unit_kerja">
+                            <option>--PILIH UNIT--</option>
+                            <?php
+                            $sql = "SELECT DISTINCT unit_kerja FROM peta"; // Menggunakan DISTINCT untuk data unik
+                            $result = $conn->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                // Menampilkan setiap unit_kerja unik sebagai opsi
+                                while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                    <option><?= $row['unit_kerja']; ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+
                         </select>
                         <button type="submit" class="input-group-text" id="basic-addon2">Search</button>
                     </div>
@@ -83,11 +112,11 @@
                 <hr>
                 <div id="pie-chart" style="height: 250px;"></div>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-4">
                 <form id="searchForm">
                     <div class="input-group mb-3 w-100">
                         <input type="text" id="searchQuery" class="form-control"
-                            placeholder="Cari Perihal atau Keterangan">
+                            placeholder="Cari Unit Kerja atau Keterangan">
                         <button type="submit" class="input-group-text" id="basic-addon2">Search</button>
                     </div>
                 </form>
@@ -103,50 +132,245 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+
     <script src="https://code.highcharts.com/highcharts.js"></script>
 
     <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        // Inisialisasi peta dengan tampilan default
+        var map = L.map('map').setView([-2.983333, 104.764383], 8);
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        // Menambahkan tile layer OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+        // Membuat layer cluster untuk mengelompokkan marker
+        var markers = L.markerClusterGroup();
+
+        // Fungsi untuk memuat data dengan query pencarian
+        function loadMapData(queryType = '', queryValue = '') {
+            // URL untuk data
+            let url = '/pelaporan_peta/controller/beranda/dataPeta.php';
+            if (queryType && queryValue) {
+                url += `?${queryType}=${encodeURIComponent(queryValue)}`;
+            }
+
+            // console.log("URL yang dikirim:", url); // Debug URL
+
+            // Menghapus semua marker sebelumnya dari cluster
+            markers.clearLayers();
+
+            // Fetch data dari server
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(function (item) {
+                        if (item.keterangan) {
+                            // Menambahkan marker ke peta
+                            var marker = L.marker([item.latitude, item.longitude]);
+
+                            // URL Google Maps untuk navigasi
+                            var googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.latitude},${item.longitude}`;
+
+                            // Menambahkan pop-up pada marker
+                            marker.bindPopup(
+                                `<p style="margin-bottom: -15px;"><b>Keterangan:</b> ${item.keterangan}<br></p>` +
+                                `<p style="margin-bottom: -15px;"><b>Waktu Laporan:</b> ${item.tanggal}<br></p>` +
+                                `<p><b>Unit Kerja:</b> ${item.unit_kerja}<br></p>` +
+                                `<a href="${googleMapsUrl}" target="_blank">Temukan arah dengan Google Maps</a>`
+                            );
+
+                            // Tambahkan marker ke cluster
+                            markers.addLayer(marker);
+                        }
+                    });
+
+                    // Menambahkan seluruh marker ke peta melalui cluster
+                    map.addLayer(markers);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Event listener untuk form pencarian kedua (form dengan input teks)
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Ambil nilai dari input pencarian
+            var query = document.getElementById('searchQuery').value;
+
+            // Panggil fungsi untuk memuat ulang data pada peta dengan query tipe "text"
+            loadMapData('query', query);
+        });
+
+        // Event listener untuk form pencarian pertama (form dengan select dropdown)
+        document.getElementById('searchForm1').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Ambil nilai dari dropdown (contoh untuk tahun dan unit)
+            var tahun = document.querySelector('#searchForm1 select:nth-child(1)').value;
+            var unit = document.querySelector('#searchForm1 select:nth-child(2)').value;
+
+            // Gabungkan nilai tahun dan unit sebagai query jika ada
+            var query = '';
+            if (tahun) query += `tahun=${encodeURIComponent(tahun)}&`;
+            if (unit) query += `unit=${encodeURIComponent(unit)}`;
+
+            // Panggil fungsi untuk memuat ulang data pada peta dengan query untuk form 1
+            loadMapData('customQuery', query);
+        });
+
+        // Load data awal tanpa filter pencarian
+        loadMapData();
     </script>
 
+
     <script>
-        Highcharts.chart('pie-chart', {
-            chart: { type: 'pie' },
-            title: { text: 'Pie Chart Example' },
-            series: [{
-                name: 'Data Share',
-                data: [
-                    { name: 'Category A', y: 40 },
-                    { name: 'Category B', y: 25 },
-                    { name: 'Category C', y: 20 },
-                    { name: 'Category D', y: 15 }
-                ]
-            }]
+        // Fungsi untuk mengambil data dari PHP dengan fetch, dengan parameter filter
+        async function fetchData(tahun = '', unit = '') {
+            // URL untuk data, dengan parameter tahun dan unit jika ada
+            let url = '/pelaporan_peta/controller/beranda/dataColumn.php';
+
+            // Menambahkan parameter tahun dan unit jika ada
+            if (tahun || unit) {
+                url += `?tahun=${encodeURIComponent(tahun)}&unit=${encodeURIComponent(unit)}`;
+            }
+
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+
+        // Event listener untuk form pencarian pertama (form dengan select dropdown)
+        document.getElementById('searchForm1').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Ambil nilai dari dropdown (contoh untuk tahun dan unit)
+            var tahun = document.querySelector('#searchForm1 select:nth-child(1)').value;
+            var unit = document.querySelector('#searchForm1 select:nth-child(2)').value;
+
+            // Memanggil fetchData dengan filter dan me-refresh kedua chart
+            fetchData(tahun, unit).then(data => {
+                // Memuat Highcharts untuk pie chart
+                Highcharts.chart('pie-chart', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Persentase Kejadian per Unit Kerja'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Unit Kerja',
+                        colorByPoint: true,
+                        data: data
+                    }]
+                });
+
+                // Memuat Highcharts untuk column chart
+                Highcharts.chart('bar-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Jumlah Kejadian per Unit Kerja'
+                    },
+                    
+                    yAxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    series: [{
+                        name: 'Total',
+                        colorByPoint: true,
+                        data: data
+                    }]
+                });
+            });
+        });
+
+        // Load data awal tanpa filter
+        fetchData().then(data => {
+            // Inisialisasi chart tanpa filter
+            Highcharts.chart('pie-chart', {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Persentase Kejadian per Unit Kerja'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Unit Kerja',
+                    colorByPoint: true,
+                    data: data
+                }]
+            });
+
+            Highcharts.chart('bar-chart', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Jumlah Kejadian per Unit Kerja'
+                },
+                xAxis: {
+                    type: 'category',
+                    title: {
+                        text: 'Unit Kerja'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    }
+                },
+                series: [{
+                    name: 'Total',
+                    colorByPoint: true,
+                    data: data
+                }]
+            });
         });
     </script>
 
-    <script>
-        Highcharts.chart('bar-chart', {
-            chart: { type: 'column' },
-            title: { text: 'Bar Chart Example' },
-            xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges', 'Pears', 'Grapes'],
-                title: { text: '' }
-            },
-            yAxis: {
-                title: { text: '' }
-            },
-            series: [{
-                name: 'Fruit Consumption',
-                data: [5, 7, 3, 8, 2]
-            }]
-        });
-    </script>
 </body>
 
 </html>

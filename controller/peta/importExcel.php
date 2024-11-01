@@ -1,7 +1,20 @@
 <?php
 session_start(); // Memulai session
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+
 require '../../config.php'; // Koneksi ke database
 require '../../vendor/autoload.php'; // Autoload dari PHPSpreadsheet
+
+// Cek apakah request adalah POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    // Jika bukan POST, arahkan kembali atau tampilkan pesan error
+    header("Location: /pelaporan_peta/peta"); // Atau halaman lain sesuai kebutuhan
+    exit;
+}
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -32,8 +45,8 @@ if (isset($_FILES['file'])) {
         // Loop setiap baris mulai dari baris ke-2 (asumsi baris pertama header)
         for ($row = 2; $row <= $highestRow; $row++) {
             $tanggal = $sheet->getCell('A' . $row)->getValue();
-            $longitude = $sheet->getCell('B' . $row)->getValue();
-            $latitude = $sheet->getCell('C' . $row)->getValue();
+            $longitude = str_replace('`', '', $sheet->getCell('B' . $row)->getValue());
+            $latitude = str_replace('`', '', $sheet->getCell('C' . $row)->getValue());
             $unit_kerja = $sheet->getCell('D' . $row)->getValue();
             $keterangan = $sheet->getCell('E' . $row)->getValue();
 
@@ -41,6 +54,8 @@ if (isset($_FILES['file'])) {
             if (is_numeric($tanggal)) {
                 $tanggal = Date::excelToDateTimeObject($tanggal)->format('Y-m-d');
             }
+
+            
 
             // Persiapkan dan eksekusi perintah SQL untuk insert data
             $stmt = $conn->prepare("INSERT INTO peta (tanggal, longitude, latitude, unit_kerja, keterangan) VALUES (?, ?, ?, ?, ?)");

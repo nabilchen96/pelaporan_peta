@@ -1,6 +1,19 @@
 <?php
 
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+
 include '../../config.php'; // Menyertakan file config.php
+
+// Cek apakah request adalah POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    // Jika bukan POST, arahkan kembali atau tampilkan pesan error
+    header("Location: /pelaporan_peta/berita"); // Atau halaman lain sesuai kebutuhan
+    exit;
+}
 
 // Mengambil ID dari POST untuk menentukan data yang akan diperbarui
 $id = $_POST['id'];
@@ -60,13 +73,14 @@ if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
 // Mengambil data dari POST
 $judul = $_POST['judul'];
 $konten = $_POST['konten'];
+$iframe = $_POST['iframe'] ?? '';
 
 // Query SQL untuk memperbarui data di database
-$sql = "UPDATE berita SET judul = ?, gambar = ?, konten = ? WHERE id = ?";
+$sql = "UPDATE berita SET judul = ?, gambar = ?, konten = ?, iframe = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 // Bind parameter
-$stmt->bind_param("sssi", $judul, $gambar, $konten, $id);
+$stmt->bind_param("ssssi", $judul, $gambar, $konten, $iframe, $id);
 
 // Menjalankan query
 if ($stmt->execute()) {

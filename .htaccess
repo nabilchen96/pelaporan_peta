@@ -13,6 +13,9 @@ RewriteRule ^peta$ views/peta/index.php [L]
 # Redirect /pelaporan_peta/berita ke /pelaporan_peta/views/berita/index.php
 RewriteRule ^berita$ views/berita/index.php [L]
 
+# Redirect /pelaporan_peta/detail_berita ke /pelaporan_peta/views/berita/detail.php
+RewriteRule ^detail_berita$ views/berita/detail.php [L]
+
 # Redirect /pelaporan_peta/login to /pelaporan_peta/views/login.php
 RewriteRule ^login$ views/login.php [L]
 

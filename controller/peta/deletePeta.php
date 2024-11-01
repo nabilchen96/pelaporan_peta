@@ -1,4 +1,11 @@
 <?php
+
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+
 require_once '../../config.php'; // Pastikan Anda mengubah path ini sesuai kebutuhan
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

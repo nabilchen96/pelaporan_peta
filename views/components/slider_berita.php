@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+?>
 <div class="bg-primary">
     <div class="container">
         <div class="col-12 list-produk">
@@ -16,7 +23,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                            <li><a class="dropdown-item" href="/pelaporan_peta/controller/logout.php">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -29,7 +36,7 @@
                         // Menyertakan file config.php
                         
                         // Mengambil data pengguna dari database
-                        $sql = "SELECT * FROM berita";
+                        $sql = "SELECT * FROM berita ORDER BY RAND()";
                         $result = $conn->query($sql);
 
                         $data = array(); // Array untuk menyimpan data
@@ -39,6 +46,7 @@
                             ?>
                             <li class="nav-item pb-2 pe-3" style="width: 300px;">
                                 <div class="card" style="
+                                    border-radius: 8px;
                                     background-image: linear-gradient(360deg, black, transparent),
                                     url('../pelaporan_peta/asset/gambar_berita/<?= $row['gambar']; ?>');
                                     background-position: center;
@@ -47,7 +55,8 @@
                                     <div class="card-body testimony-text" style="white-space: normal;">
                                         <p class="mb-0 mt-4"
                                             style="color: white; position: absolute; bottom: 10px; right: 10px; left: 10px; font-size: 14px;">
-                                            <a style="color: white; text-decoration: none; " href="{{ $item->slug }}">
+                                            <a style="color: white; text-decoration: none; "
+                                                href="../pelaporan_peta/detail_berita?id=<?= $row['id']; ?>">
                                                 <?= substr($row['judul'], 0, 80); ?>
                                             </a>
                                         </p>

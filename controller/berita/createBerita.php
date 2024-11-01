@@ -1,6 +1,19 @@
 <?php
 
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /pelaporan_peta/login");
+    exit;
+}
+
 include '../../config.php'; // Menyertakan file config.php
+
+// Cek apakah request adalah POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    // Jika bukan POST, arahkan kembali atau tampilkan pesan error
+    header("Location: /pelaporan_peta/berita"); // Atau halaman lain sesuai kebutuhan
+    exit;
+}
 
 // Menyimpan waktu saat ini
 $created_at = date("Y-m-d H:i:s");
@@ -28,14 +41,15 @@ if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
             // Mengambil data dari POST
             $judul = $_POST['judul'];
             $konten = $_POST['konten'];
+            $iframe = $_POST['iframe'] ?? '';
             $gambar = $newFileName; // Simpan nama file ke dalam database
 
             // Query SQL untuk menyimpan data ke database
-            $sql = "INSERT INTO berita (judul, gambar, konten, created_at) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO berita (judul, gambar, konten, iframe, created_at) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
 
             // Bind parameter
-            $stmt->bind_param("ssss", $judul, $gambar, $konten, $created_at);
+            $stmt->bind_param("sssss", $judul, $gambar, $konten, $iframe, $created_at);
 
             // Menjalankan query
             if ($stmt->execute()) {
